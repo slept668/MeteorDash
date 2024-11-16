@@ -9,6 +9,7 @@ public class Meteor {
 	private Sprite sprite;
 	private Rectangle hitbox;
 	private float speed; //fall speed
+	private float randomDirection = 0;
 	
 	public Meteor(Texture texture, float worldWidth, float worldHeight) {
 		//create sprite and set size
@@ -26,13 +27,32 @@ public class Meteor {
 	}
 	
 	public void update(float delta) {
+		//set rotation point or shit goes wild
+		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 		//fall based on speed
 		sprite.translateY(-speed *delta);
+		//rotation
+		float rotateSpeed = 90f;
+		sprite.rotate(rotateSpeed * delta);
+		if (sprite.getRotation() >= 360) {
+			sprite.setRotation(sprite.getRotation() - 360);
+		}
+		//random fall vectors
+		if (randomDirection == 0) {
+			randomDirection = MathUtils.random(-2f, 2f);
+		}
+		
+		sprite.translateX(randomDirection * delta);
+		
 		updateHitbox();
 	}
 	
 	public void updateHitbox() {
-		hitbox.set(sprite.getX(), sprite.getY(),sprite.getWidth(),sprite.getHeight());
+		float hbWidth = sprite.getWidth() * 0.6f;
+		float hbHeight = sprite.getHeight() * 0.6f;
+		float hbX = sprite.getX() + (sprite.getWidth() - hbWidth) / 2;
+		float hbY = sprite.getY() + (sprite.getHeight() - hbHeight) / 2;
+		hitbox.set(hbX, hbY, hbWidth, hbHeight);
 	}
 	
 	public Sprite getSprite() {
@@ -44,6 +64,7 @@ public class Meteor {
 	}
 	
 	public void dispose() {
+		System.out.println("Metor.dispose()");
 		sprite.getTexture().dispose();
 	}
 }
