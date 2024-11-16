@@ -28,7 +28,9 @@ public class GameScreen implements Screen{
 	float dropTimer;
 	//Rectangle bucketRectangle;
 	Rectangle dropRectangle;
-	int dropsGathered;
+	int hitsTaken;
+	float totalTime;
+	int points;
 	
 	public GameScreen(final Drop game) {
 		this.game = game;
@@ -38,6 +40,7 @@ public class GameScreen implements Screen{
 		Texture player1Texture = new Texture("ship.png");
 		meteorTexture = new Texture("meteor.png");
 		player1 = new MainPlayer(player1Texture);
+		points = 0;
 		
 		//load sounds
 		dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
@@ -56,7 +59,12 @@ public class GameScreen implements Screen{
 	
 	@Override
 	public void show() {
-		music.play();
+		System.out.println("GameScreen.show()");
+		if (!music.isPlaying()) {
+	        music.setLooping(true);
+	        music.setVolume(0.3f);
+	        music.play();
+	    }
 	}
 	
 	@Override
@@ -110,11 +118,12 @@ public class GameScreen implements Screen{
 			Meteor meteor = meteors.get(i);
 			meteor.update(delta);
 			
-			if (meteor.getSprite().getY() < -meteor.getSprite().getHeight()) {
+			if ((meteor.getSprite().getY() < -meteor.getSprite().getHeight())) {
 				meteors.removeIndex(i);
+				points += 100;
 			}
 			else if (player1.getHitbox().overlaps(meteor.getHitbox())) {
-				dropsGathered++;
+				hitsTaken++;
 				meteors.removeIndex(i);
 				dropSound.play();
 			}
@@ -128,6 +137,8 @@ public class GameScreen implements Screen{
 	}
 	
 	private void draw() {
+		float delta = Gdx.graphics.getDeltaTime();
+		totalTime += delta;
 		ScreenUtils.clear(Color.BLACK);
 		game.viewport.apply();
 		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
@@ -140,7 +151,9 @@ public class GameScreen implements Screen{
 		game.batch.draw(backgroundTexture,  0,  0,  worldWidth,  worldHeight);
 		player1.draw(game.batch);
 		
-		game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, worldHeight);
+		game.font.draw(game.batch, "Hits Taken: " + hitsTaken, 0, worldHeight);
+		game.font.draw(game.batch, "Time Elapsed: " + String.format("%.0f", totalTime), 0, worldHeight - 0.2f);
+		game.font.draw(game.batch, "Points: " + points, 0, worldHeight - 0.4f);
 		
 		for (Meteor meteor  : meteors) {
 			meteor.getSprite().draw(game.batch);
@@ -165,6 +178,8 @@ public class GameScreen implements Screen{
 	
 	@Override
 	public void hide() {
+		System.out.println("Hide() activated");
+		dispose();
 	}
 
 	@Override
@@ -177,11 +192,19 @@ public class GameScreen implements Screen{
 	
 	@Override
 	public void dispose() {
-		backgroundTexture.dispose();
-		dropSound.dispose();
-		music.stop();
-		music.dispose();
-		meteorTexture.dispose();
-		player1.dispose();
+		System.out.println("Disposing GameScreen resources...");
+	    backgroundTexture.dispose();
+	    for (Meteor meteor : meteors) {
+	        meteor.dispose();  // Call dispose on each Meteor
+	    }
+	    dropSound.dispose();
+	    music.stop();
+	    music.dispose();
+	    if (!(music.isPlaying())) {
+	    	System.out.println("Music disposed of properly");
+	    }
+	    meteorTexture.dispose();
+	    player1.dispose();
+	    System.out.println("All GameScreen resources disposed.");
 	}
 }
