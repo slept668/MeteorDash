@@ -1,4 +1,4 @@
-package io.github.slept668GameTest;
+package io.github.MeteorDash;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -23,7 +23,7 @@ public class Meteor {
 		hitbox = new Rectangle();
 		updateHitbox();
 		
-		speed = MathUtils.random(1f, 3f);
+		speed = MathUtils.random(20f, 27f) / 10;
 	}
 	
 	public void update(float delta) {
@@ -39,7 +39,7 @@ public class Meteor {
 		}
 		//random fall vectors
 		if (randomDirection == 0) {
-			randomDirection = MathUtils.random(-2f, 2f);
+			randomDirection = MathUtils.random(-10, 10f) / 10;
 		}
 		
 		sprite.translateX(randomDirection * delta);
