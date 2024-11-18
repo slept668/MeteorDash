@@ -1,4 +1,4 @@
-package io.github.slept668GameTest;
+package io.github.MeteorDash;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -12,6 +12,11 @@ public class MainPlayer {
 	private Texture texture;
 	private Sprite sprite;
 	private Rectangle hitbox;
+	private float velocityX = 0f;
+	private float velocityY = 0f;
+	private final float acceleration = 5f;
+	private final float maxSpeed = 30f;
+	private final float friction = 0.99f;
 	
 	public MainPlayer(Texture texture) {
 		this.texture = texture;
@@ -21,10 +26,36 @@ public class MainPlayer {
 		updateHitbox();
 	}
 	
-	public void move(float dx, float dy, Viewport viewport) {
-		sprite.translate(dx, dy);
-		clampPosition(viewport);
+	public void move(boolean moveLeft, boolean moveRight, boolean moveUp, boolean moveDown, float delta, Viewport viewport) {
+		if (moveLeft) {
+			velocityX -= acceleration * delta;
+		}
+		if (moveRight) {
+			velocityX += acceleration * delta;
+		}
+		if (moveUp) {
+			velocityY += acceleration * delta;
+		}
+		if (moveDown) {
+			velocityY -= acceleration * delta;
+		}
+		
+		//friction time
+		if (!moveLeft && !moveRight) {
+			velocityX *= friction;
+		}
+		if (!moveUp && !moveDown) {
+			velocityY *= friction;
+		}
+		
+		//clamp velocity to maxSpeed
+		velocityX = MathUtils.clamp(velocityX,  -maxSpeed,  maxSpeed);
+		velocityY = MathUtils.clamp(velocityY,  -maxSpeed,  maxSpeed);
+		
+		sprite.translate(velocityX * delta, velocityY * delta);
 		updateHitbox();
+		
+		clampPosition(viewport);
 	}
 	
 	public void setPosition(Vector2 position, Viewport viewport) {
