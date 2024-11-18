@@ -1,4 +1,4 @@
-package io.github.slept668GameTest;
+package io.github.MeteorDash;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -7,15 +7,13 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen{
-	final Drop game;
+	final MeteorDash game;
 	
 	Texture backgroundTexture;
 	MainPlayer player1;
@@ -31,9 +29,11 @@ public class GameScreen implements Screen{
 	int hitsTaken;
 	float totalTime;
 	int points;
+	AudioManager audioMan;
 	
-	public GameScreen(final Drop game) {
+	public GameScreen(final MeteorDash game, AudioManager audioMan) {
 		this.game = game;
+		this.audioMan = audioMan;
 		
 		//load images
 		backgroundTexture = new Texture("spacebg.png");
@@ -43,23 +43,20 @@ public class GameScreen implements Screen{
 		points = 0;
 		
 		//load sounds
+		game.bgm.stop();
+		game.bgm.dispose();
 		dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
         music = Gdx.audio.newMusic(Gdx.files.internal("CanVas - Cole Slawter.mp3"));
         music.setLooping(true);
-        music.setVolume(0.3f);
-        
-        //bucketSprite = new Sprite(bucketTexture);
-        //bucketSprite.setSize(1,  1);
+        music.setVolume(0.2f);
         
         touchPos = new Vector2();
-         
-        //bucketRectangle = new Rectangle();
+        
         dropRectangle = new Rectangle();
 	}
 	
 	@Override
 	public void show() {
-		System.out.println("GameScreen.show()");
 		if (!music.isPlaying()) {
 	        music.setLooping(true);
 	        music.setVolume(0.3f);
@@ -75,39 +72,24 @@ public class GameScreen implements Screen{
 	}
 	
 	private void input() {
-		float speed = 4f;
 		float delta = Gdx.graphics.getDeltaTime();
-		float moveX = 0;
-		float moveY = 0;
-		
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            moveX = speed * delta;
-        }
-    	else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-    		moveX = -speed * delta;
-        }
-    	if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-    		moveY = speed * delta;
-        }
-    	else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-    		moveY = -speed * delta;
-        }
-    	// Normalize diagonal movement to avoid faster diagonal speeds
-    	if (moveX != 0 && moveY != 0) {
-    	    float length = (float) Math.sqrt(moveX * moveX + moveY * moveY);
-    	    moveX /= length; // Normalize the X component
-    	    moveY /= length; // Normalize the Y component
-    	    moveX *= speed * delta; // Scale back to desired speed
-    	    moveY *= speed * delta; // Scale back to desired speed
-    	}
-    	player1.move(moveX, moveY,game.viewport);
+		boolean moveLeft = Gdx.input.isKeyPressed(Input.Keys.LEFT);
+		boolean moveRight = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
+		boolean moveUp = Gdx.input.isKeyPressed(Input.Keys.UP);
+		boolean moveDown = Gdx.input.isKeyPressed(Input.Keys.DOWN);
+    	player1.move(moveLeft, moveRight, moveUp, moveDown, delta, game.viewport);
     	
     	if (Gdx.input.isTouched()) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY()); // Get where the touch happened on screen
             game.viewport.unproject(touchPos); // Convert the units to the world units of the viewport
-            player1.setPosition(touchPos, game.viewport); // Change the horizontally centered position of the bucket
-            //bucketSprite.setCenterY(touchPos.y); // Change the horizontally centered position of the bucket //Y axis touch movement
+            player1.setPosition(touchPos, game.viewport); // Change the horizontally centered position of the plane
         }
+    	
+    	if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+			audioMan.playSound("menuSelect");
+			game.setScreen(new MainMenuScreen(game, audioMan));
+			dispose();
+		}
 	}
 	
 	private void logic() {
@@ -119,6 +101,11 @@ public class GameScreen implements Screen{
 			meteor.update(delta);
 			
 			if ((meteor.getSprite().getY() < -meteor.getSprite().getHeight())) {
+				meteors.removeIndex(i);
+				points += 100;
+			}
+			else if((meteor.getSprite().getX() > game.viewport.getWorldWidth()) || (meteor.getSprite().getX() + meteor.getSprite().getWidth() 
+					< game.viewport.getWorldWidth() - game.viewport.getWorldWidth())) {
 				meteors.removeIndex(i);
 				points += 100;
 			}
