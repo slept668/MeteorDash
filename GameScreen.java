@@ -3,6 +3,7 @@ package io.github.MeteorDash;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class GameScreen implements Screen{
 	final MeteorDash game;
 	
+	AssetManager assMan;
 	Texture backgroundTexture;
 	MainPlayer player1;
 	Texture meteorTexture;
@@ -95,7 +97,6 @@ public class GameScreen implements Screen{
 	private void logic() {
 		float delta = Gdx.graphics.getDeltaTime();
 		player1.clampPosition(game.viewport);
-		
 		for (int i = meteors.size - 1; i >=0; i--) {
 			Meteor meteor = meteors.get(i);
 			meteor.update(delta);
@@ -117,7 +118,7 @@ public class GameScreen implements Screen{
 		}
 		
 		dropTimer += delta;
-		if (dropTimer > 1f) {
+		if (dropTimer > 0.7f) {
 			dropTimer = 0;
 			createMeteor();
 		}
@@ -155,6 +156,7 @@ public class GameScreen implements Screen{
 		float worldHeight = game.viewport.getWorldHeight();
 		
 		Meteor meteor = new Meteor(meteorTexture, worldWidth, worldHeight);
+		meteor.setSpeedMod(totalTime * 0.03f + 1);
 		meteors.add(meteor);
 	}
 	
@@ -166,7 +168,6 @@ public class GameScreen implements Screen{
 	@Override
 	public void hide() {
 		System.out.println("Hide() activated");
-		dispose();
 	}
 
 	@Override
