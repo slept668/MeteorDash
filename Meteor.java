@@ -10,6 +10,7 @@ public class Meteor {
 	private Rectangle hitbox;
 	private float speed; //fall speed
 	private float randomDirection = 0;
+	private float speedMod = 1;
 	
 	public Meteor(Texture texture, float worldWidth, float worldHeight) {
 		//create sprite and set size
@@ -30,7 +31,7 @@ public class Meteor {
 		//set rotation point or shit goes wild
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 		//fall based on speed
-		sprite.translateY(-speed *delta);
+		sprite.translateY(-speed * delta * speedMod);
 		//rotation
 		float rotateSpeed = 90f;
 		sprite.rotate(rotateSpeed * delta);
@@ -53,6 +54,10 @@ public class Meteor {
 		float hbX = sprite.getX() + (sprite.getWidth() - hbWidth) / 2;
 		float hbY = sprite.getY() + (sprite.getHeight() - hbHeight) / 2;
 		hitbox.set(hbX, hbY, hbWidth, hbHeight);
+	}
+	
+	public void setSpeedMod(float mod) {
+		this.speedMod = mod;
 	}
 	
 	public Sprite getSprite() {
