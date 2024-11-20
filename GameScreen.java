@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
@@ -20,7 +19,6 @@ public class GameScreen implements Screen{
 	Texture backgroundTexture;
 	MainPlayer player1;
 	Texture meteorTexture;
-	Sound dropSound;
 	Music music;
 	//Sprite bucketSprite;
 	Vector2 touchPos;
@@ -47,10 +45,8 @@ public class GameScreen implements Screen{
 		//load sounds
 		game.bgm.stop();
 		game.bgm.dispose();
-		dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
         music = Gdx.audio.newMusic(Gdx.files.internal("CanVas - Cole Slawter.mp3"));
         music.setLooping(true);
-        music.setVolume(0.2f);
         
         touchPos = new Vector2();
         
@@ -61,7 +57,7 @@ public class GameScreen implements Screen{
 	public void show() {
 		if (!music.isPlaying()) {
 	        music.setLooping(true);
-	        music.setVolume(0.3f);
+	        music.setVolume(0.2f);
 	        music.play();
 	    }
 	}
@@ -113,7 +109,15 @@ public class GameScreen implements Screen{
 			else if (player1.getHitbox().overlaps(meteor.getHitbox())) {
 				hitsTaken++;
 				meteors.removeIndex(i);
-				dropSound.play();
+				audioMan.playSound("bang");
+				audioMan.playSound("glass");
+				
+				if (hitsTaken >= 10) {
+					audioMan.playSound("explode");
+					game.setScreen(new GameOverScreen(game, audioMan));
+					dispose();
+					System.out.println("Switching to GameOverScreen");
+				}
 			}
 		}
 		
@@ -185,7 +189,6 @@ public class GameScreen implements Screen{
 	    for (Meteor meteor : meteors) {
 	        meteor.dispose();  // Call dispose on each Meteor
 	    }
-	    dropSound.dispose();
 	    music.stop();
 	    music.dispose();
 	    if (!(music.isPlaying())) {
