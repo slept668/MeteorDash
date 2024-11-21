@@ -1,0 +1,15 @@
+MeteorDashMainPack.png
+size:1024,512
+repeat:none
+meteor
+bounds:2,2,32,32
+pixelart_starfield
+bounds:646,188,320,320
+pixelart_starfield_corona
+bounds:324,188,320,320
+pixelart_starfield_diagonal_diffraction_spikes
+bounds:2,188,320,320
+ship
+bounds:968,460,48,48
+spaceBG
+bounds:2,36,256,150
