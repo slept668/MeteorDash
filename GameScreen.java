@@ -122,7 +122,7 @@ public class GameScreen implements Screen{
 		}
 		
 		dropTimer += delta;
-		if (dropTimer > 0.7f) {
+		if (dropTimer > 0.5f) {
 			dropTimer = 0;
 			createMeteor();
 		}
@@ -160,7 +160,7 @@ public class GameScreen implements Screen{
 		float worldHeight = game.viewport.getWorldHeight();
 		
 		Meteor meteor = new Meteor(meteorTexture, worldWidth, worldHeight);
-		meteor.setSpeedMod(totalTime * 0.03f + 1);
+		meteor.setSpeedMod(totalTime * 0.02f + 1);
 		meteors.add(meteor);
 	}
 	
