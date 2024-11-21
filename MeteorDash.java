@@ -20,6 +20,8 @@ public class MeteorDash extends Game {
 		audioMan.addSound("menuTick", Gdx.audio.newSound(Gdx.files.internal("Sounds/menuTick.mp3")));
 		audioMan.addSound("menuSelect", Gdx.audio.newSound(Gdx.files.internal("Sounds/menuSelect.mp3")));
 		audioMan.addSound("startGame", Gdx.audio.newSound(Gdx.files.internal("Sounds/startGame.mp3")));
+		audioMan.addSound("glass", Gdx.audio.newSound(Gdx.files.internal("sounds/glass.mp3")));
+		audioMan.addSound("bang", Gdx.audio.newSound(Gdx.files.internal("sounds/bang.mp3")));
 		bgm.setLooping(true);
 		bgm.setVolume(0.2f);
 		bgm.play();
