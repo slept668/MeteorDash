@@ -36,9 +36,9 @@ public class GameScreen implements Screen{
 		this.audioMan = audioMan;
 		
 		//load images
-		backgroundTexture = new Texture("spacebg.png");
-		Texture player1Texture = new Texture("ship.png");
-		meteorTexture = new Texture("meteor.png");
+		backgroundTexture = new Texture("BG/spacebg.png");
+		Texture player1Texture = new Texture("Ship/ship.png");
+		meteorTexture = new Texture("Objects/meteor.png");
 		player1 = new MainPlayer(player1Texture);
 		points = 0;
 		
