@@ -21,7 +21,7 @@ public class GameOverScreen implements Screen {
 		music = Gdx.audio.newMusic(Gdx.files.internal("sounds/gameOverBGM.mp3"));
         music.setLooping(true);
 		
-		bg = new Texture("pixelart_starfield.png");
+		bg = new Texture("BG/pixelart_starfield.png");
 	}
 
 	@Override
