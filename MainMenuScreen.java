@@ -14,14 +14,14 @@ import java.util.List;
 public class MainMenuScreen implements Screen {
 	final MeteorDash game;
 	AudioManager audioMan;
-	public Texture bg;
+	Texture bg;
 	MenuArrow selecArrow;
 	private boolean keyUpPressed = false;  // Add flags for UP and DOWN keys
 	private boolean keyDownPressed = false;
 	
 	public MainMenuScreen(final MeteorDash game, AudioManager audioMan) {
 		this.game = game;
-		bg = new Texture("pixelart_starfield.png");
+		bg = new Texture("BG/pixelart_starfield.png");
 		this.audioMan = audioMan;
 		Texture arrowTexture = new Texture("Arrows/Red Arrow 3/File1.png");
 		selecArrow = new MenuArrow(arrowTexture);
