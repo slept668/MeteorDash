@@ -23,7 +23,7 @@ public class Settings implements Screen {
 	public Settings(final MeteorDash game, AudioManager audioMan) {
 		this.game = game;
 		this.audioMan = audioMan;
-		bg = new Texture("pixelart_starfield.png");
+		bg = new Texture("BG/pixelart_starfield.png");
 		Texture arrowTexture = new Texture("Arrows/Red Arrow 3/File1.png");
 		selecArrow = new MenuArrow(arrowTexture);
 	}
