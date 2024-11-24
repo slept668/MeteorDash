@@ -27,6 +27,20 @@ public class Meteor {
 		speed = MathUtils.random(20f, 27f) / 10;
 	}
 	
+	public Meteor(Sprite sprite,float worldWidth, float worldHeight) {
+		this.sprite = sprite;
+		sprite.setSize(1, 1);
+		 
+		//initial position
+		sprite.setX(MathUtils.random(0f, worldWidth - sprite.getWidth()));
+		sprite.setY(worldHeight); //right above the top of the screen
+		
+		hitbox = new Rectangle();
+		updateHitbox();
+		
+		speed = MathUtils.random(20f, 27f) / 10;
+	}
+	
 	public void update(float delta) {
 		//set rotation point or shit goes wild
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
@@ -69,7 +83,5 @@ public class Meteor {
 	}
 	
 	public void dispose() {
-		System.out.println("Metor.dispose()");
-		sprite.getTexture().dispose();
 	}
 }
