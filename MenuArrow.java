@@ -24,6 +24,17 @@ public class MenuArrow {
 		sprite.setY(-1);
 	}
 	
+	public MenuArrow(Sprite sprite) {
+		this.sprite = sprite;
+		this.sprite.setSize(0.25f,  0.25f);
+		this.menuNum = 1;
+		
+		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
+		sprite.setRotation(90f);
+		sprite.setX(-1);
+		sprite.setY(-1);
+	}
+	
 	public void setMenuLocations(List<Vector2> locations) {
 		this.menuLocations = locations;
 	}
