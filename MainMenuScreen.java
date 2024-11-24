@@ -3,9 +3,11 @@ package io.github.MeteorDash;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import java.util.ArrayList;
@@ -13,18 +15,37 @@ import java.util.List;
 
 public class MainMenuScreen implements Screen {
 	final MeteorDash game;
-	AudioManager audioMan;
-	Texture bg;
-	MenuArrow selecArrow;
+	public AssetMan assetMan;
+	public AudioManager audioMan;
+	public TextureAtlas mainPack;
+	public TextureAtlas arrowsPack;
+	public Sprite bg;
+	public Sprite arrowSprite;
+	public Sound menuTick;
+	public Sound menuSelect;
+	public Sound startGame;
+	public MenuArrow selecArrow;
 	private boolean keyUpPressed = false;  // Add flags for UP and DOWN keys
 	private boolean keyDownPressed = false;
 	
 	public MainMenuScreen(final MeteorDash game, AudioManager audioMan) {
 		this.game = game;
-		bg = new Texture("BG/pixelart_starfield.png");
+		this.assetMan = game.getAssetMan();
+		
+		mainPack = assetMan.manager.get("Pack/MeteorDashMainPack.atlas");
+		arrowsPack = assetMan.manager.get("Pack/ArrowsPack.atlas");
+		bg = mainPack.createSprite("pixelart_starfield");
+		arrowSprite = arrowsPack.createSprite("File");
+		//arrowTexture = new Texture("Arrows/Red Arrow 3/File1.png");
+		selecArrow = new MenuArrow(arrowSprite);
+		
+		menuTick = assetMan.manager.get("Sounds/menuTick.mp3");
+		menuSelect = assetMan.manager.get("Sounds/menuSelect.mp3");
+		startGame = assetMan.manager.get("Sounds/startGame.mp3");
+		//bg = new Texture("BG/pixelart_starfield.png");
 		this.audioMan = audioMan;
-		Texture arrowTexture = new Texture("Arrows/Red Arrow 3/File1.png");
-		selecArrow = new MenuArrow(arrowTexture);
+		//arrowTexture = new Texture("Arrows/Red Arrow 3/File1.png");
+		
 	}
 	
 	@Override
@@ -37,7 +58,8 @@ public class MainMenuScreen implements Screen {
 	public void input() {
 		if (Gdx.input.isKeyPressed(Input.Keys.UP) && !keyUpPressed) {
 	        selecArrow.menuUp();
-	        audioMan.playSound("menuTick");
+	        menuTick.play();
+	        //audioMan.playSound("menuTick");
 	        keyUpPressed = true;  // Mark the UP key as pressed
 	    } else if (!Gdx.input.isKeyPressed(Input.Keys.UP)) {
 	        keyUpPressed = false;  // Reset the flag when the key is released
@@ -45,7 +67,8 @@ public class MainMenuScreen implements Screen {
 		
 		if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && !keyDownPressed) {
 	        selecArrow.menuDown();
-	        audioMan.playSound("menuTick");
+	        menuTick.play();
+	        //audioMan.playSound("menuTick");
 	        keyDownPressed = true;  // Mark the DOWN key as pressed
 	    } else if (!Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 	        keyDownPressed = false;  // Reset the flag when the key is released
@@ -53,12 +76,14 @@ public class MainMenuScreen implements Screen {
 		
 		if (Gdx.input.isTouched() || Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
 			if (selecArrow.getMenuStatus() == 1) {
-				audioMan.playSound("startGame");
+				startGame.play();
+				//audioMan.playSound("startGame");
 				game.setScreen(new GameScreen(game, audioMan));
 				dispose();
 			}
 			else if (selecArrow.getMenuStatus() == 2) {
-				audioMan.playSound("menuSelect");
+				menuSelect.play();
+				//audioMan.playSound("menuSelect");
 				game.setScreen(new Settings(game, audioMan));
 				dispose();
 			}
@@ -139,7 +164,5 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		bg.dispose();
-		selecArrow.dispose();
 	}
 }
