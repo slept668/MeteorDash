@@ -3,10 +3,12 @@ package io.github.MeteorDash;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -15,11 +17,17 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class GameScreen implements Screen{
 	final MeteorDash game;
 	
-	AssetManager assMan;
-	Texture backgroundTexture;
+	AssetMan assetMan;
+	Sprite backgroundTexture;
 	MainPlayer player1;
+	Sprite player1Texture;
 	Texture meteorTexture;
+	TextureAtlas mainPack;
 	Music music;
+	Sound bang;
+	Sound glass;
+	Sound explode;
+	Sound menuSelect;
 	//Sprite bucketSprite;
 	Vector2 touchPos;
 	Array<Meteor> meteors = new Array<>();
@@ -34,18 +42,24 @@ public class GameScreen implements Screen{
 	public GameScreen(final MeteorDash game, AudioManager audioMan) {
 		this.game = game;
 		this.audioMan = audioMan;
+		this.assetMan = game.getAssetMan();
 		
 		//load images
-		backgroundTexture = new Texture("BG/spacebg.png");
-		Texture player1Texture = new Texture("Ship/ship.png");
+		mainPack = assetMan.manager.get("Pack/MeteorDashMainPack.atlas");
+		backgroundTexture = mainPack.createSprite("spaceBG");
+		player1Texture = mainPack.createSprite("ship");
 		meteorTexture = new Texture("Objects/meteor.png");
 		player1 = new MainPlayer(player1Texture);
+		bang = assetMan.manager.get("Sounds/bang.mp3");
+		glass = assetMan.manager.get("Sounds/glass.mp3");
+		explode = assetMan.manager.get("Sounds/explode.mp3");
+		menuSelect = assetMan.manager.get("Sounds/menuSelect.mp3");
 		points = 0;
 		
 		//load sounds
 		game.bgm.stop();
 		game.bgm.dispose();
-        music = Gdx.audio.newMusic(Gdx.files.internal("CanVas - Cole Slawter.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("Music/CanVas - Cole Slawter.mp3"));
         music.setLooping(true);
         
         touchPos = new Vector2();
@@ -84,7 +98,7 @@ public class GameScreen implements Screen{
         }
     	
     	if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-			audioMan.playSound("menuSelect");
+			menuSelect.play();
 			game.setScreen(new MainMenuScreen(game, audioMan));
 			dispose();
 		}
@@ -109,11 +123,11 @@ public class GameScreen implements Screen{
 			else if (player1.getHitbox().overlaps(meteor.getHitbox())) {
 				hitsTaken++;
 				meteors.removeIndex(i);
-				audioMan.playSound("bang");
-				audioMan.playSound("glass");
+				bang.play();
+				glass.play();
 				
 				if (hitsTaken >= 10) {
-					audioMan.playSound("explode");
+					explode.play();
 					game.setScreen(new GameOverScreen(game, audioMan));
 					dispose();
 					System.out.println("Switching to GameOverScreen");
@@ -185,17 +199,15 @@ public class GameScreen implements Screen{
 	@Override
 	public void dispose() {
 		System.out.println("Disposing GameScreen resources...");
-	    backgroundTexture.dispose();
 	    for (Meteor meteor : meteors) {
 	        meteor.dispose();  // Call dispose on each Meteor
 	    }
+	    meteorTexture.dispose();
 	    music.stop();
 	    music.dispose();
 	    if (!(music.isPlaying())) {
 	    	System.out.println("Music disposed of properly");
 	    }
-	    meteorTexture.dispose();
-	    player1.dispose();
 	    System.out.println("All GameScreen resources disposed.");
 	}
 }
