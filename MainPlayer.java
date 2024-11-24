@@ -26,6 +26,13 @@ public class MainPlayer {
 		updateHitbox();
 	}
 	
+	public MainPlayer(Sprite sprite) {
+		this.sprite = new Sprite(sprite);
+		this.sprite.setSize(1,  1);
+		this.hitbox = new Rectangle();
+		updateHitbox();
+	}
+	
 	public void move(boolean moveLeft, boolean moveRight, boolean moveUp, boolean moveDown, float delta, Viewport viewport) {
 		if (moveLeft) {
 			velocityX -= acceleration * delta;
@@ -88,6 +95,8 @@ public class MainPlayer {
 	}
 	
 	public void dispose() {
-		texture.dispose();
+		if (texture !=null) {
+			texture.dispose();
+		}
 	}
 }
