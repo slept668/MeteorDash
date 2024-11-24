@@ -18,7 +18,7 @@ public class GameOverScreen implements Screen {
 	public GameOverScreen(final MeteorDash game, AudioManager audioMan) {
 		this.game = game;
 		this.audioMan = audioMan;
-		music = Gdx.audio.newMusic(Gdx.files.internal("sounds/gameOverBGM.mp3"));
+		music = Gdx.audio.newMusic(Gdx.files.internal("Music/gameOverBGM.mp3"));
         music.setLooping(true);
 		
 		bg = new Texture("BG/pixelart_starfield.png");
