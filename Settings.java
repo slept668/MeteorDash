@@ -15,8 +15,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class Settings implements Screen {
 	final MeteorDash game;
 	public Texture bg;
-	AudioManager audioMan;
-	MenuArrow selecArrow;
+	public AudioManager audioMan;
+	public MenuArrow selecArrow;
 	private boolean keyUpPressed = false;  // Add flags for UP and DOWN keys
 	private boolean keyDownPressed = false;
 	
