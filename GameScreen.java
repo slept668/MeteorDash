@@ -17,6 +17,7 @@ public class GameScreen implements Screen{
 	final MeteorDash game;
 	
 	AssetMan assetMan;
+	GameSettings gameSettings;
 	Sprite backgroundTexture;
 	MainPlayer player1;
 	Sprite player1Texture;
@@ -33,11 +34,11 @@ public class GameScreen implements Screen{
 	int hitsTaken;
 	float totalTime;
 	int points;
-	AudioManager audioMan;
 	
 	public GameScreen(final MeteorDash game) {
 		this.game = game;
 		this.assetMan = game.getAssetMan();
+		this.gameSettings = game.gameSettings;
 		
 		//load images
 		mainPack = assetMan.manager.get("Pack/MeteorDashMainPack.atlas");
@@ -165,8 +166,9 @@ public class GameScreen implements Screen{
 	private void createMeteor() {
 		float worldWidth = game.viewport.getWorldWidth();
 		float worldHeight = game.viewport.getWorldHeight();
+		String difficulty = gameSettings.getDifficulty();
 		
-		Meteor meteor = new Meteor(meteorTexture, worldWidth, worldHeight);
+		Meteor meteor = new Meteor(meteorTexture, worldWidth, worldHeight, difficulty);
 		meteor.setSpeedMod(totalTime * 0.02f + 1);
 		meteors.add(meteor);
 	}
