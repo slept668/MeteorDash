@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -28,20 +27,16 @@ public class GameScreen implements Screen{
 	Sound glass;
 	Sound explode;
 	Sound menuSelect;
-	//Sprite bucketSprite;
 	Vector2 touchPos;
 	Array<Meteor> meteors = new Array<>();
 	float dropTimer;
-	//Rectangle bucketRectangle;
-	Rectangle dropRectangle;
 	int hitsTaken;
 	float totalTime;
 	int points;
 	AudioManager audioMan;
 	
-	public GameScreen(final MeteorDash game, AudioManager audioMan) {
+	public GameScreen(final MeteorDash game) {
 		this.game = game;
-		this.audioMan = audioMan;
 		this.assetMan = game.getAssetMan();
 		
 		//load images
@@ -63,8 +58,6 @@ public class GameScreen implements Screen{
         music.setLooping(true);
         
         touchPos = new Vector2();
-        
-        dropRectangle = new Rectangle();
 	}
 	
 	@Override
@@ -99,7 +92,7 @@ public class GameScreen implements Screen{
     	
     	if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
 			menuSelect.play();
-			game.setScreen(new MainMenuScreen(game, audioMan));
+			game.setScreen(new MainMenuScreen(game));
 			dispose();
 		}
 	}
@@ -128,7 +121,7 @@ public class GameScreen implements Screen{
 				
 				if (hitsTaken >= 10) {
 					explode.play();
-					game.setScreen(new GameOverScreen(game, audioMan));
+					game.setScreen(new GameOverScreen(game));
 					dispose();
 					System.out.println("Switching to GameOverScreen");
 				}
