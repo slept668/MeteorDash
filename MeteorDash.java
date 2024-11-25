@@ -13,14 +13,12 @@ public class MeteorDash extends Game {
 	public BitmapFont font;
 	public FitViewport viewport;
 	public AssetMan assetMan;
-	public AudioManager audioMan;
 	public TextureAtlas mainPack;
 	public TextureAtlas healthPack;
 	public TextureAtlas arrowPack;
 	public Music bgm;
 	
 	public void create() {
-		audioMan = new AudioManager();
 		assetMan = new AssetMan();
 		
 		assetMan.loadImages();
@@ -51,7 +49,7 @@ public class MeteorDash extends Game {
 		font.setUseIntegerPositions(false);
 		font.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight());
 		
-		this.setScreen(new MainMenuScreen(this, audioMan));
+		this.setScreen(new MainMenuScreen(this));
 	}
 	
 	public void render() {
@@ -64,7 +62,6 @@ public class MeteorDash extends Game {
 	
 	public void dispose() {
 		assetMan.manager.dispose();
-		audioMan.dispose();
 		bgm.dispose();
 		batch.dispose();
 		font.dispose();
