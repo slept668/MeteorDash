@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class Settings implements Screen {
 	final MeteorDash game;
+	public GameSettings gameSettings;
 	public TextureAtlas mainPack;
 	public TextureAtlas arrowsPack;
 	public AssetMan assetMan;
@@ -26,9 +27,15 @@ public class Settings implements Screen {
 	public Sound menuSelect;
 	private boolean keyUpPressed = false;  // Add flags for UP and DOWN keys
 	private boolean keyDownPressed = false;
+	private boolean keyRightPressed = false;
+	private boolean keyLeftPressed = false;
+	// Add timers to prevent continuous key fire
+    private float keyRepeatTimer = 0f;
+    private float keyRepeatDelay = 0.3f;  // 200ms delay between key presses
 	
 	public Settings(final MeteorDash game) {
 		this.game = game;
+		this.gameSettings = game.gameSettings;
 		this.assetMan = game.getAssetMan();
 		mainPack = assetMan.manager.get("Pack/MeteorDashMainPack.atlas");
 		arrowsPack = assetMan.manager.get("Pack/ArrowsPack.atlas");
@@ -49,12 +56,14 @@ public class Settings implements Screen {
 	@Override
 	public void render(float delta) {
 		// TODO Auto-generated method stub
-		input();
+		input(delta);
 		logic();
 		draw();
 	}
 	
-	public void input() {
+	public void input(float delta) {
+		keyRepeatTimer -= delta;  // Decrease the timer by the time passed since the last frame
+		
 		if (Gdx.input.isKeyPressed(Input.Keys.UP) && !keyUpPressed) {
 			menuTick.play();
 	        selecArrow.menuUp();
@@ -69,6 +78,26 @@ public class Settings implements Screen {
 	        keyDownPressed = true;  // Mark the DOWN key as pressed
 	    } else if (!Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 	        keyDownPressed = false;  // Reset the flag when the key is released
+	    }
+		
+		if (selecArrow.getMenuStatus() == 1 && Gdx.input.isKeyPressed(Input.Keys.RIGHT) && !keyUpPressed
+				 && keyRepeatTimer <= 0) {
+			menuTick.play();
+	        gameSettings.diffRight();
+	        keyRightPressed = true;  // Mark the UP key as pressed
+	        keyRepeatTimer = keyRepeatDelay;
+	    } else if (!Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+	        keyRightPressed = false;  // Reset the flag when the key is released
+	    }
+		
+		if (selecArrow.getMenuStatus() == 1 && Gdx.input.isKeyPressed(Input.Keys.LEFT) && !keyUpPressed
+				 && keyRepeatTimer <= 0) {
+			menuTick.play();
+	        gameSettings.diffLeft();
+	        keyLeftPressed = true;  // Mark the UP key as pressed
+	        keyRepeatTimer = keyRepeatDelay;
+	    } else if (!Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+	        keyLeftPressed = false;  // Reset the flag when the key is released
 	    }
 		
 		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
@@ -93,26 +122,28 @@ ScreenUtils.clear(Color.BLACK);
 		GlyphLayout layout = new GlyphLayout();
 		String difficulty = "Difficulty: ";
 		String volume = "Volume: ";
+		String diffSetting = gameSettings.getDifficulty();
 		
 		layout.setText(game.font, difficulty);
-		float startGameX = ((game.viewport.getWorldWidth() - layout.width) / 2f);
-		float startGameY = (game.viewport.getWorldHeight() / 10) * 6f;
+		float difficultyX = ((game.viewport.getWorldWidth() - layout.width) / 2f);
+		float difficultyY = (game.viewport.getWorldHeight() / 10) * 6f;
 		
 		
 		layout.setText(game.font, volume);
-		float settingsX = ((game.viewport.getWorldWidth() - layout.width)) / 2f;
-		float settingsY = (game.viewport.getWorldHeight() / 10) * 5.5f;
+		float volumeX = ((game.viewport.getWorldWidth() - layout.width)) / 2f;
+		float volumeY = (game.viewport.getWorldHeight() / 10) * 5.5f;
 		
 		List<Vector2> menuLocations = new ArrayList<>();
-		menuLocations.add(new Vector2(startGameX, startGameY));
-        menuLocations.add(new Vector2(settingsX, settingsY));
+		menuLocations.add(new Vector2(difficultyX, difficultyY));
+        menuLocations.add(new Vector2(volumeX, volumeY));
         selecArrow.setMenuLocations(menuLocations);
         selecArrow.menuMove();
 		
 		game.batch.begin();
 		game.batch.draw(bg,  0,  0,  worldWidth,  worldHeight);
-		game.font.draw(game.batch,  difficulty, startGameX, startGameY);
-		game.font.draw(game.batch,  volume,  settingsX, settingsY);
+		game.font.draw(game.batch,  difficulty, difficultyX, difficultyY);
+		game.font.draw(game.batch,  volume,  volumeX, volumeY);
+		game.font.draw(game.batch, diffSetting, difficultyX + 1,  difficultyY);
 		selecArrow.draw(game.batch);
 		game.batch.end();
 	}
