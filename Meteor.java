@@ -10,11 +10,13 @@ public class Meteor {
 	private Rectangle hitbox;
 	private float speed; //fall speed
 	private float randomDirection = 0;
-	private float speedMod = 1;
+	private float speedMod = 1f;
+	private String difficulty;
 	
-	public Meteor(Texture texture, float worldWidth, float worldHeight) {
+	public Meteor(Texture texture, float worldWidth, float worldHeight, String difficulty) {
 		//create sprite and set size
 		sprite = new Sprite(texture);
+		this.difficulty = difficulty;
 		sprite.setSize(1, 1);
 		
 		//initial position
@@ -24,11 +26,20 @@ public class Meteor {
 		hitbox = new Rectangle();
 		updateHitbox();
 		
-		speed = MathUtils.random(20f, 27f) / 10;
+		if (this.difficulty == "easy") {
+			speed = MathUtils.random(20f, 27f) / 10f;
+		}
+		else if (this.difficulty == "medium") {
+			speed = MathUtils.random(20f, 27f) / 8f;
+		}
+		else if (this.difficulty == "hard") {
+			speed = MathUtils.random(20f, 27f) / 6f;
+		}
 	}
 	
-	public Meteor(Sprite sprite,float worldWidth, float worldHeight) {
+	public Meteor(Sprite sprite,float worldWidth, float worldHeight, String difficulty) {
 		this.sprite = sprite;
+		this.difficulty = difficulty;
 		sprite.setSize(1, 1);
 		 
 		//initial position
@@ -37,8 +48,16 @@ public class Meteor {
 		
 		hitbox = new Rectangle();
 		updateHitbox();
+		if (this.difficulty == "easy") {
+			speed = MathUtils.random(20f, 27f) / 10f;
+		}
+		else if (this.difficulty == "medium") {
+			speed = MathUtils.random(20f, 27f) / 8f;
+		}
+		else if (this.difficulty == "hard") {
+			speed = MathUtils.random(20f, 27f) / 6f;
+		}
 		
-		speed = MathUtils.random(20f, 27f) / 10;
 	}
 	
 	public void update(float delta) {
