@@ -16,7 +16,6 @@ import java.util.List;
 public class MainMenuScreen implements Screen {
 	final MeteorDash game;
 	public AssetMan assetMan;
-	public AudioManager audioMan;
 	public TextureAtlas mainPack;
 	public TextureAtlas arrowsPack;
 	public Sprite bg;
@@ -28,7 +27,7 @@ public class MainMenuScreen implements Screen {
 	private boolean keyUpPressed = false;  // Add flags for UP and DOWN keys
 	private boolean keyDownPressed = false;
 	
-	public MainMenuScreen(final MeteorDash game, AudioManager audioMan) {
+	public MainMenuScreen(final MeteorDash game) {
 		this.game = game;
 		this.assetMan = game.getAssetMan();
 		
@@ -36,15 +35,11 @@ public class MainMenuScreen implements Screen {
 		arrowsPack = assetMan.manager.get("Pack/ArrowsPack.atlas");
 		bg = mainPack.createSprite("pixelart_starfield");
 		arrowSprite = arrowsPack.createSprite("File");
-		//arrowTexture = new Texture("Arrows/Red Arrow 3/File1.png");
 		selecArrow = new MenuArrow(arrowSprite);
 		
 		menuTick = assetMan.manager.get("Sounds/menuTick.mp3");
 		menuSelect = assetMan.manager.get("Sounds/menuSelect.mp3");
 		startGame = assetMan.manager.get("Sounds/startGame.mp3");
-		//bg = new Texture("BG/pixelart_starfield.png");
-		this.audioMan = audioMan;
-		//arrowTexture = new Texture("Arrows/Red Arrow 3/File1.png");
 		
 	}
 	
@@ -78,13 +73,13 @@ public class MainMenuScreen implements Screen {
 			if (selecArrow.getMenuStatus() == 1) {
 				startGame.play();
 				//audioMan.playSound("startGame");
-				game.setScreen(new GameScreen(game, audioMan));
+				game.setScreen(new GameScreen(game));
 				dispose();
 			}
 			else if (selecArrow.getMenuStatus() == 2) {
 				menuSelect.play();
 				//audioMan.playSound("menuSelect");
-				game.setScreen(new Settings(game, audioMan));
+				game.setScreen(new Settings(game));
 				dispose();
 			}
 		}
