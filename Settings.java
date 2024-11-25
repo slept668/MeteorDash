@@ -31,7 +31,7 @@ public class Settings implements Screen {
 	private boolean keyLeftPressed = false;
 	// Add timers to prevent continuous key fire
     private float keyRepeatTimer = 0f;
-    private float keyRepeatDelay = 0.3f;  // 200ms delay between key presses
+    private float keyRepeatDelay = 0.3f;  // 300ms delay between key presses
 	
 	public Settings(final MeteorDash game) {
 		this.game = game;
