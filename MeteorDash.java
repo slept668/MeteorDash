@@ -13,6 +13,7 @@ public class MeteorDash extends Game {
 	public BitmapFont font;
 	public FitViewport viewport;
 	public AssetMan assetMan;
+	public GameSettings gameSettings;
 	public TextureAtlas mainPack;
 	public TextureAtlas healthPack;
 	public TextureAtlas arrowPack;
@@ -20,6 +21,7 @@ public class MeteorDash extends Game {
 	
 	public void create() {
 		assetMan = new AssetMan();
+		gameSettings = new GameSettings();
 		
 		assetMan.loadImages();
 		assetMan.loadMusic();
