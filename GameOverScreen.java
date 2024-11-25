@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -11,15 +12,21 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameOverScreen implements Screen {
 	final MeteorDash game;
-	AudioManager audioMan;
+	public AssetMan assetMan;
 	Texture bg;
 	Music music;
+	public Sound menuTick;
+	public Sound menuSelect;
+	public Sound startGame;
 	
-	public GameOverScreen(final MeteorDash game, AudioManager audioMan) {
+	public GameOverScreen(final MeteorDash game) {
 		this.game = game;
-		this.audioMan = audioMan;
+		assetMan = game.getAssetMan();
 		music = Gdx.audio.newMusic(Gdx.files.internal("Music/gameOverBGM.mp3"));
         music.setLooping(true);
+        menuTick = assetMan.manager.get("Sounds/menuTick.mp3");
+		menuSelect = assetMan.manager.get("Sounds/menuSelect.mp3");
+		startGame = assetMan.manager.get("Sounds/startGame.mp3");
 		
 		bg = new Texture("BG/pixelart_starfield.png");
 	}
@@ -44,8 +51,8 @@ public class GameOverScreen implements Screen {
 	
 	public void input(){
 		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-			audioMan.playSound("menuSelect");
-			game.setScreen(new MainMenuScreen(game, audioMan));
+			menuSelect.play();
+			game.setScreen(new MainMenuScreen(game));
 			dispose();
 		}
 	}
