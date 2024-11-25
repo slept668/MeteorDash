@@ -4,7 +4,7 @@ public class GameSettings {
 	private static GameSettings instance;
 	private String difficulty;
 	
-	private GameSettings() {
+	public GameSettings() {
 		difficulty = "easy";
 	}
 	
